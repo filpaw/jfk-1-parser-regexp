@@ -1,0 +1,94 @@
+body {
+    background-color: #fff;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+#page-wrapper {
+    width: 95%;
+    margin: auto;
+    font-family: sans-serif;
+}
+
+#page-wrapper>h1 {
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+section {
+    
+}
+
+#display {
+    min-height: 350px;
+    width: auto;
+    background-color: cornsilk;
+    border: 2px solid #54c;
+    margin: 20px auto;
+    padding: 10px; 
+}
+
+.results {
+    display: inline-block;
+    width: 23%;
+    margin: auto;
+    padding-right: 10px; 
+    overflow: scroll;
+    text-align: left;
+    height: 350px;
+}
+
+.results>p {
+    background-color: red;
+}
+
+.clear {
+    clear: both;
+}
+
+#fileDisplayArea {
+    margin-bottom: 20px;
+    display: none;
+}
+
+
+#resultDisplayArea {
+    margin-bottom: 20px;
+}
+
+ul {
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    list-style-type: none;
+}
+.sign {
+    width: 40px;
+    text-align: center;
+}
+
+#operationButtons>input,
+#asideButtons>input {
+    font-weight: 800;
+}
+
+.select {
+    font-size: 20px;
+}
+
+#selectInput>input,
+#operationButtons>input,
+#asideButtons>input{
+    font-size: 16px;
+}
+
+footer {
+    width: 100%;
+    height: 60px;
+    position: fixed;
+    bottom: 0px;
+    text-align: center;
+}
