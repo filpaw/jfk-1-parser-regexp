@@ -31,16 +31,20 @@ section {
 
 .results {
     display: inline-block;
-    width: 23%;
-    margin: auto;
-    padding-right: 10px; 
+    width: 33%;
+    margin: auto; 
     overflow: scroll;
     text-align: left;
-    height: 350px;
+    height: 200px;
 }
 
-.results>p {
-    background-color: red;
+#displayArea {
+    width: 100%;
+}
+
+.results>pre>p {
+    background-color: white;
+    text-align: center;
 }
 
 .clear {
@@ -71,7 +75,7 @@ li {
 }
 
 #operationButtons>input,
-#asideButtons>input {
+#testButtons>input {
     font-weight: 800;
 }
 
@@ -81,7 +85,7 @@ li {
 
 #selectInput>input,
 #operationButtons>input,
-#asideButtons>input{
+#testButtons>input{
     font-size: 16px;
 }
 

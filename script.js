@@ -1,4 +1,14 @@
 'use strict';
+// ZMIANY:
+//
+// ADRES POCZTOWY zamiast KOD POCZTOWY
+// zmienione - możliwość wprowadzania > 1 spacja albo >= 0 spacja między elementami
+//
+// Możliwość wstawiania więcej niż raz pod rząd tego samego pliku
+//
+// ## Problem z 
+// ## postfix
+// ## usuwa za dużo znaków po działaniu
 
 window.onload = function() {
     var fileInput = document.getElementById('fileInput');
@@ -6,9 +16,21 @@ window.onload = function() {
     
     var signPosition = 0;
     var sign;
+
+// REGULAR EXPRESSIONS
+    var regExp = /[0-9]{2}-[0-9]{3}(\s*[A-ZĆŻŹŁŚ][a-ząćśęńłóźż]+)((\s*|\s*-\s*)[A-ZĆŻŹŁŚ][a-ząćśęńłóźż]+)*\,\s*((ul|[Aa]l)?\s*\.)(\s*[A-ZĆŻŹŁŚ][a-ząćśęńłóźż]+)((\s+|\s*-\s*)[A-ZĆŻŹŁŚ][a-ząćśęńłóźż]+)*\s+[0-9]+[a-z]*(\s*\/\s*[0-9]+[a-z]*)*/g;
     
-// SHOW 'Empty Array'
+    var changeSpace = / */g;
+    var changeDot = /\./g;
+    var changeComma = /\,/g;
+    var changePostalCodeDist = /-[0-9]{3}/g;
+    var changeAdressNumberDist = /[a-z][0-9]/g;
+    var changeLocalityDist = /[a-z][A-Z]/g;
+    
+// show/hide buttons/info
     $('#resultDisplayArea h1').show();
+    hideSign();
+    showTestButtons(1);
     
 // INPUT FILES
     fileInput.addEventListener('change',
@@ -16,26 +38,38 @@ window.onload = function() {
         
             var files = fileInput.files;
             var textType = /text/;
-            var regExp = /[0-9]{2}-[0-9]{3}/g;
+//            var changePostalCodeDistExp = /[0-9]{2}-[0-9]{3}/g;
+            
+        
             var max2 = files.length;
         
-        if(files.length > 2) max2 = 2;
-        if(results.length == 1) max2 = 1;
+//        if(files.length > 2) max2 = 2;
+//        if(results.length == 1) max2 = 1;
         for(var i = 0; i < max2; i++) {
             if(files[i].type.match(textType)) {
                 var reader = new FileReader();
                 reader.onload = function(e) {
-                    
+                    if(!e.target.result.match(regExp)){
+                        alert("This set is empty!");
+
+                    }
+                    else {
                     var liText = document.createElement('li');
                     var liResult = document.createElement('li');
-                    var removedDuplicates = removeDuplicates(e.target.result.match(regExp));
-                    liText.innerText = e.target.result;
-                    liResult.innerText = removedDuplicates;
-                    $('#resultDisplayArea ul').append(liResult);
-                    results.push(removedDuplicates);
-                    $('#resultDisplayArea h1').hide();
                     
-                    if(isTwoNumbersLast() == 2) hideInput();
+                    var expression = removeDuplicates(e.target.result.match(regExp));
+                    expression = removeMultiWhitespaces(expression);
+                    
+                    liText.innerText = e.target.result;
+                    liResult.innerText = expression;
+                    
+                    $('#resultDisplayArea ul').append(liResult);
+                    results.push(expression);
+                    
+                    $('#resultDisplayArea h1').hide();
+                    if(isLength2()) showSign();
+                    document.getElementById('fileInput').value = "";
+                    }
                 };
                 reader.readAsText(files[i]);
             }
@@ -44,7 +78,7 @@ window.onload = function() {
     
 // INPUT OPERATORS (SIGN)
     $('#plus').click(function(e) {
-        if(!isLength2() || isOperatorLast()) {}
+        if(!isLength2()/* || isOperatorLast()*/) {}
         else {
             var li = document.createElement('li');
             li.innerText = "+";
@@ -52,11 +86,12 @@ window.onload = function() {
             results.push($(li).text());
             showInput();
         }
+        console.log(results);
         }
     )
     
     $('#minus').click(function(e) {
-        if(!isLength2() || isOperatorLast()) {}
+        if(!isLength2()/* || isOperatorLast()*/) {}
         else {
             var li = document.createElement('li');
             li.innerText = "-";
@@ -64,11 +99,13 @@ window.onload = function() {
             results.push($(li).text());
             showInput();
         }
+        console.log(results);
+
         }
     )
     
     $('#multi').click(function(e) {
-        if(!isLength2() || isOperatorLast()) {}
+        if(!isLength2()/* || isOperatorLast()*/) {}
         else {
             var li = document.createElement('li');
             li.innerText = "*";
@@ -76,13 +113,14 @@ window.onload = function() {
             results.push($(li).text());
             showInput();
         }
+        console.log(results);
         }
     )
     
 // SUBMIT BUTTON
     $('#submitButton').click(function(e) {
         checkSignPosition();
-            if(results.length > 2){
+        if(isTwoNumbersFirst()) {
             switch(sign) {
                 case "+": totalArrays(results[signPosition - 2], results[signPosition - 1]);
                     break;
@@ -91,7 +129,9 @@ window.onload = function() {
                 case "*": productArrays(results[signPosition - 2], results[signPosition - 1]);
                     break;  
             }
-        }  
+        }
+        if(!isTwoNumbersFirst()) hideSign();
+        console.log(results);
     });
     
 // TESTS
@@ -99,9 +139,8 @@ window.onload = function() {
     
     $('#test').click(function(e) {
         checkSignPosition();
-        var li = document.createElement('li');
-        li.innerHTML = testN++;
-        $('#resultDisplayArea ul li:eq('+(signPosition-2)+')').prepend(li);
+        console.log(signPosition);
+        console.log(sign);
     });
     
     $('#test2').click(function(e) {
@@ -172,11 +211,13 @@ window.onload = function() {
             if(!results.length)
                 $('#resultDisplayArea h1').show();
             else {
-                results.splice(0,0,outcome);
+                
                 var li2 = li.cloneNode(true);
                 if(signPosition>2){
+                    results.splice(signPosition-2,0,outcome);
                     $('#resultDisplayArea ul li:eq('+(signPosition-3)+')').append(li2);
-                } else 
+                } else
+                    results.splice(0,0,outcome);
                     $('#resultDisplayArea ul').prepend(li2);
             }
         } else {
@@ -186,9 +227,12 @@ window.onload = function() {
             console.log(signPosition);
             if(signPosition>2){
                 $('#resultDisplayArea ul li:eq('+(signPosition-3)+')').append(li2);
-            } else 
+                results.splice(signPosition-2,0,outcome);
+            } else {
                 $('#resultDisplayArea ul').prepend(li2);
-            results.splice(signPosition-2,0,outcome);  
+                results.splice(0,0,outcome);
+            }
+            console.log(outcome);
         }
         $('#differenceDisplayArea ul').append(li);
     }
@@ -214,12 +258,16 @@ window.onload = function() {
             if(!results.length)
                 $('#resultDisplayArea h1').show();
             else {
-                results.splice(0,0,outcome);
+                
                 var li2 = li.cloneNode(true);
                 if(signPosition>2){
+                    results.splice(signPosition-2,0,outcome);
+                    console.log(signPosition);
                     $('#resultDisplayArea ul li:eq('+(signPosition-3)+')').append(li2);
-                } else 
+                } else {
+                    results.splice(0,0,outcome);
                     $('#resultDisplayArea ul').prepend(li2);
+                }
             }
         } else {
             if(signPosition>2){
@@ -265,20 +313,33 @@ window.onload = function() {
         $('#fileInput').prop('disabled', false);
     }
     
-    function isTwoNumbersLast() {   
+    function hideSign() {
+        $('.sign').prop('disabled', true);
+    }
+    
+    function showSign() {
+        $('.sign').prop('disabled', false);
+    }
+    
+    function showTestButtons(test) {
+        test == 0 ? $('#testButtons').css('visibility','hidden')
+            : $('#testButtons').css('visibility','visible');
+    }
+    
+    function isTwoNumbersFirst() {   
         if(!isLength2()){ return 0;}
         else {
-            if(results[results.length-1] != '+' &&
-               results[results.length-1] != '-' &&
-               results[results.length-1] != '*') {
-                if(results[results.length-2] != '+' &&
-                   results[results.length-2] != '-' &&
-                   results[results.length-2] != '*') {
-                    return 2;
-                }
-                else return 1;
+            if(results[0] == '+' &&
+               results[0] == '-' &&
+               results[0] == '*') {
+                return 0;
             }
-            else return 0;
+            if(results[1] == '+' &&
+               results[1] == '-' &&
+               results[1] == '*') {
+                return 0;
+            }
+            else return 1;
         }
     }
     
@@ -316,6 +377,24 @@ window.onload = function() {
                     --j;
                 }
             }
+        }
+        return e;
+    }
+    
+    function removeMultiWhitespaces(e) {
+        for(var i = 0, length = e.length; i < length; i++) {
+            e[i] = e[i].replace(/ */g, '');
+            e[i] = e[i].replace(/\./g, '. ');
+            e[i] = e[i].replace(/\,/g, ', ');
+            e[i] = e[i].replace(changePostalCodeDist, function(match) {
+                return match + " ";
+            } );
+            e[i] = e[i].replace(changeAdressNumberDist, function(match) {
+                return e[i].match(changeAdressNumberDist)[0][0] + ' ' +  e[i].match(changeAdressNumberDist)[0][1];
+            });
+            e[i] = e[i].replace(changeLocalityDist, function(match) {
+                return e[i].match(changeLocalityDist)[0][0] + ' ' +  e[i].match(changeLocalityDist)[0][1];
+            });
         }
         return e;
     }
