@@ -3,6 +3,7 @@ body {
     margin: 0;
     padding: 0;
     height: 100%;
+    min-width: 260px;
 }
 
 #page-wrapper {
@@ -31,7 +32,7 @@ section {
 
 .results {
     display: inline-block;
-    width: 33%;
+    width: 32%;
     margin: auto; 
     overflow: scroll;
     text-align: left;

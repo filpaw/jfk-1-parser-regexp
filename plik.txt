@@ -1,4 +1,1 @@
-01-100   Warszawa   Sad, Al . Marszałkowska 1/3k
-01-100   Warszawa   Sad, Al . Marszałkowska 1/3k
-03-100   Warszawa   Sad, Al . Marszałkowska 1/3k
-04-100   Warszawa   Sad, Al . Marszałkowska 1/3k
+01-100   Warszawa   Sad, Al . Marszałkowska 1/3k03-100   Warsza
