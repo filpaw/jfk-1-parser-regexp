@@ -119,6 +119,15 @@ window.onload = function() {
             }
         }
         if(!isTwoNumbersFirst()) hideSign();
+        if(results[0] == "+" &&
+               results[0] == "-" &&
+               results[0] == "*") {
+                $('#selectButton').prop('disabled','true');
+        } else if(results[1] == "+" &&
+               results[1] == "-" &&
+               results[1] == "*") {
+                $('#selectButton').prop('disabled','true');
+        }
     });
     
 // TESTS
@@ -141,24 +150,24 @@ window.onload = function() {
     });
 
 // OPERATIONS
-    function totalArrays(zbior1, zbior2) {    
+    function totalArrays(set1, set2) {    
         var outcome = new Array();
         var flag;
         var li = document.createElement("li");
         
-        for(var i = 0; i < zbior1.length; i++) {
-            outcome.push(zbior1[i]);
+        for(var i = 0; i < set1.length; i++) {
+            outcome.push(set1[i]);
         }
         
-        for(var i = 0; i < zbior2.length; i++) {
+        for(var i = 0; i < set2.length; i++) {
             flag = 0;
-            for(var j = 0; j < zbior1.length; j++) {
-                if(zbior2[i] == zbior1[j]) {
+            for(var j = 0; j < set1.length; j++) {
+                if(set2[i] == set1[j]) {
                     flag = 1;
-                    j = zbior1.length;
+                    j = set1.length;
                 }
             }
-            if(flag == 0) outcome.push(zbior2[i]);
+            if(flag == 0) outcome.push(set2[i]);
         }
         deleteE();
         if(!outcome.length) {
@@ -190,20 +199,20 @@ window.onload = function() {
         $("#totalDisplayArea ul").append(li); 
     }
     
-    function differenceArrays(zbior1, zbior2) {
+    function differenceArrays(set1, set2) {
         var outcome = new Array();
         var flag;
         var li = document.createElement("li");
         
-        for(var i = 0; i < zbior1.length; i++) {
+        for(var i = 0; i < set1.length; i++) {
             flag = 0;
-            for(var j = 0; j < zbior2.length; j++) {
-                if(zbior1[i] == zbior2[j]) {
+            for(var j = 0; j < set2.length; j++) {
+                if(set1[i] == set2[j]) {
                     flag = 1;
-                    j = zbior2.length;
+                    j = set2.length;
                 }
             }
-            if(flag == 0) outcome.push(zbior1[i]);
+            if(flag == 0) outcome.push(set1[i]);
         }
         deleteE();
         if(!outcome.length) {
@@ -238,15 +247,15 @@ window.onload = function() {
         $("#differenceDisplayArea ul").append(li);
     }
     
-    function productArrays(zbior1, zbior2) {
+    function productArrays(set1, set2) {
         var outcome = new Array();
         var li = document.createElement("li");
         
-        for(var i = 0; i < zbior1.length; i++) {
-            for(var j = 0; j < zbior2.length; j++) {
-                if(zbior1[i] == zbior2[j]) {
-                    outcome.push(zbior1[i]);
-                    j = zbior2.length;
+        for(var i = 0; i < set1.length; i++) {
+            for(var j = 0; j < set2.length; j++) {
+                if(set1[i] == set2[j]) {
+                    outcome.push(set1[i]);
+                    j = set2.length;
                 }
             }
         }
